@@ -1,6 +1,6 @@
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
-import { getgetSupabaseAdmin() } from '@/lib/supabase'
+import { getSupabaseAdmin } from '@/lib/supabase'
 
 function generateSlug(title: string): string {
   return title
@@ -35,7 +35,6 @@ export async function POST(req: Request) {
     cancellation_policy,
   } = body
 
-  // Basic validation
   if (!title || !activity_type || !location_name || !start_date || !end_date) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
@@ -44,27 +43,25 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'End date must be after start date' }, { status: 400 })
   }
 
-  // Get the user's Supabase row
-  const { data: user, error: userError } = await getSupabaseAdmin()
+  const db = getSupabaseAdmin()
+
+  const { data: user, error: userError } = await db
     .from('users')
     .select('id')
     .eq('clerk_id', userId)
     .single()
 
   if (userError || !user) {
-    // User doesn't exist in Supabase yet — create them on the fly
-    const { data: newUser, error: createError } = await getSupabaseAdmin()
+    const { error: createError } = await db
       .from('users')
       .insert({ clerk_id: userId, email: '', plan: 'free' })
-      .select('id')
-      .single()
 
-    if (createError || !newUser) {
+    if (createError) {
       return NextResponse.json({ error: 'Failed to resolve user' }, { status: 500 })
     }
   }
 
-  const { data: freshUser } = await getSupabaseAdmin()
+  const { data: freshUser } = await db
     .from('users')
     .select('id')
     .eq('clerk_id', userId)
@@ -76,7 +73,7 @@ export async function POST(req: Request) {
 
   const slug = generateSlug(title)
 
-  const { data: trip, error: tripError } = await getSupabaseAdmin()
+  const { data: trip, error: tripError } = await db
     .from('trips')
     .insert({
       guide_id: freshUser.id,
