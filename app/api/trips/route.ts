@@ -1,6 +1,6 @@
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
-import { getSupabaseAdmin } from '@/lib/supabase'
+import { getgetSupabaseAdmin() } from '@/lib/supabase'
 
 function generateSlug(title: string): string {
   return title
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
   }
 
   // Get the user's Supabase row
-  const { data: user, error: userError } = await supabaseAdmin
+  const { data: user, error: userError } = await getSupabaseAdmin()
     .from('users')
     .select('id')
     .eq('clerk_id', userId)
@@ -53,7 +53,7 @@ export async function POST(req: Request) {
 
   if (userError || !user) {
     // User doesn't exist in Supabase yet — create them on the fly
-    const { data: newUser, error: createError } = await supabaseAdmin
+    const { data: newUser, error: createError } = await getSupabaseAdmin()
       .from('users')
       .insert({ clerk_id: userId, email: '', plan: 'free' })
       .select('id')
@@ -64,7 +64,7 @@ export async function POST(req: Request) {
     }
   }
 
-  const { data: freshUser } = await supabaseAdmin
+  const { data: freshUser } = await getSupabaseAdmin()
     .from('users')
     .select('id')
     .eq('clerk_id', userId)
@@ -76,7 +76,7 @@ export async function POST(req: Request) {
 
   const slug = generateSlug(title)
 
-  const { data: trip, error: tripError } = await supabaseAdmin
+  const { data: trip, error: tripError } = await getSupabaseAdmin()
     .from('trips')
     .insert({
       guide_id: freshUser.id,
