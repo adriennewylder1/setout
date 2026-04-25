@@ -1,4 +1,9 @@
-export default function HomePage() {
+import { auth } from '@clerk/nextjs/server'
+
+export default async function HomePage() {
+  const { userId } = await auth()
+  const isLoggedIn = !!userId
+
   return (
     <>
       <style>{`
@@ -167,56 +172,6 @@ export default function HomePage() {
         .gone-x{color:#e87676;font-size:16px;margin-bottom:8px;}
         .gone-label{font-size:13px;color:#b0ac98;line-height:1.5;font-weight:400;}
         .gone-label del{color:#787060;}
-        .audience{background:var(--cream);padding:7rem 6rem;}
-        .audience-inner{max-width:1000px;margin:0 auto;}
-        .audience-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:3.5rem;align-items:start;}
-        .audience-left h3{font-family:'Playfair Display',serif;font-size:clamp(22px,2.5vw,32px);font-weight:700;color:var(--forest);margin-bottom:1rem;line-height:1.2;}
-        .audience-left h3 em{font-style:italic;color:var(--ember);}
-        .audience-left p{font-size:15px;line-height:1.8;color:var(--t2);font-weight:300;margin-bottom:1.5rem;}
-        .audience-tools{display:flex;flex-direction:column;gap:14px;}
-        .tool-row{display:flex;align-items:flex-start;gap:14px;padding:1.2rem;background:var(--parch);border-radius:14px;border:1px solid rgba(30,51,24,0.07);transition:transform 0.2s;}
-        .tool-row:hover{transform:translateX(4px);}
-        .tool-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
-        .tool-name{font-size:14px;font-weight:500;color:var(--forest);margin-bottom:3px;}
-        .tool-desc{font-size:12px;color:var(--t3);line-height:1.6;font-weight:300;}
-        .audience-right{position:relative;}
-        .creator-card{background:var(--forest);border-radius:24px;padding:2.5rem;box-shadow:0 24px 60px rgba(0,0,0,0.15);}
-        .creator-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;}
-        .creator-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--canopy),var(--lichen));display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:20px;color:var(--cream);font-weight:700;}
-        .creator-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--parch);}
-        .creator-handle{font-size:12px;color:#9090a0;font-family:'DM Mono',monospace;}
-        .creator-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem;}
-        .cs-item{text-align:center;background:rgba(255,255,255,0.07);border-radius:12px;padding:12px 8px;}
-        .cs-val{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--parch);line-height:1;margin-bottom:4px;}
-        .cs-label{font-family:'DM Mono',monospace;font-size:9px;color:#9090a0;letter-spacing:0.08em;text-transform:uppercase;}
-        .creator-trips{display:flex;flex-direction:column;gap:8px;}
-        .trip-pill{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.05);border-radius:10px;padding:10px 14px;font-size:12px;}
-        .trip-pill-name{color:#c8c4b0;}
-        .trip-pill-status{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.06em;padding:3px 10px;border-radius:100px;}
-        .status-open{background:rgba(125,168,98,0.2);color:var(--sage);}
-        .status-full{background:rgba(196,114,42,0.2);color:var(--ember-light);}
-        .status-waitlist{background:rgba(59,130,246,0.2);color:#7ec8e3;}
-        .pricing{background:var(--parch);padding:7rem 6rem;text-align:center;}
-        .pricing-inner{max-width:1060px;margin:0 auto;}
-        .pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:3.5rem;text-align:left;}
-        .tier{background:var(--cream);border-radius:20px;padding:2rem;border:1px solid rgba(30,51,24,0.08);position:relative;transition:transform 0.2s,box-shadow 0.2s;}
-        .tier:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.07);}
-        .tier.hot{background:var(--forest);border-color:transparent;}
-        .tier-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--ember);color:white;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 14px;border-radius:100px;white-space:nowrap;}
-        .tier-name{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:1rem;color:var(--t3);}
-        .tier.hot .tier-name{color:rgba(240,234,216,0.4);}
-        .tier-price{font-family:'Playfair Display',serif;font-size:52px;font-weight:900;color:var(--forest);line-height:1;margin-bottom:4px;}
-        .tier.hot .tier-price{color:var(--parch);}
-        .tier-price sup{font-size:22px;font-weight:400;vertical-align:super;}
-        .tier-mo{font-size:12px;color:var(--t3);margin-bottom:1.5rem;font-weight:300;}
-        .tier.hot .tier-mo{color:rgba(240,234,216,0.35);}
-        .tier-features{list-style:none;padding:0;border-top:1px solid rgba(30,51,24,0.08);padding-top:1.2rem;}
-        .tier.hot .tier-features{border-color:rgba(240,234,216,0.1);}
-        .tier-features li{font-size:13px;color:var(--t2);padding:5px 0;display:flex;align-items:flex-start;gap:8px;font-weight:300;line-height:1.5;}
-        .tier.hot .tier-features li{color:rgba(240,234,216,0.7);}
-        .tick{color:var(--lichen);font-size:13px;flex-shrink:0;margin-top:1px;}
-        .tier.hot .tick{color:var(--ember-light);}
-        .pricing-note{margin-top:2rem;font-family:'DM Mono',monospace;font-size:11px;color:var(--t3);letter-spacing:0.06em;}
         .capture{background:linear-gradient(135deg,var(--forest) 0%,var(--ink) 100%);padding:7rem 6rem;text-align:center;position:relative;overflow:hidden;}
         .capture::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 25% 60%,rgba(125,168,98,0.1) 0%,transparent 50%),radial-gradient(ellipse at 75% 40%,rgba(196,114,42,0.1) 0%,transparent 50%);}
         .capture-inner{position:relative;z-index:1;max-width:560px;margin:0 auto;}
@@ -246,22 +201,19 @@ export default function HomePage() {
           .hero-right{height:420px;order:2;}
           h1{color:var(--forest);}
           .hero-body{color:var(--t2);}
-          section,.pitch,.gone,.how,.audience,.no-commission,.pricing,.capture{padding:4rem 1.8rem;}
+          section,.pitch,.gone,.how,.no-commission,.capture{padding:4rem 1.8rem;}
           .commission-banner{padding:1.4rem 1.8rem;gap:1.5rem;}
           .personas{grid-template-columns:1fr;}
           .persona{min-height:320px;}
           .nc-grid{grid-template-columns:1fr;}
           .steps{grid-template-columns:1fr 1fr;}
           .gone-grid{grid-template-columns:1fr 1fr;}
-          .audience-grid{grid-template-columns:1fr;}
-          .pricing-grid{grid-template-columns:1fr 1fr;}
           .comparison-bar{grid-template-columns:1fr;text-align:center;}
           .comp-vs{display:none;}
           .pitch-cols{grid-template-columns:1fr;}
           footer{flex-direction:column;gap:1.5rem;text-align:center;padding:2rem 1.8rem;}
         }
         @media(max-width:560px){
-          .pricing-grid{grid-template-columns:1fr;}
           .gone-grid{grid-template-columns:1fr;}
           .steps{grid-template-columns:1fr;}
           .nav-cta,.nav-promise{display:none;}
@@ -282,7 +234,9 @@ export default function HomePage() {
         <div className="nav-right">
           <a href="#how" className="nav-link">How it works</a>
           <a href="#pricing" className="nav-link">Pricing</a>
-          <a href="/sign-up" className="nav-cta">Get started →</a>
+          <a href={isLoggedIn ? "/dashboard" : "/sign-up"} className="nav-cta">
+            {isLoggedIn ? "Dashboard →" : "Get started →"}
+          </a>
         </div>
       </nav>
 
@@ -294,8 +248,12 @@ export default function HomePage() {
             The best trips don&apos;t come from travel agencies. They come from the person who&apos;s fished that river a hundred times, hiked that ridge every fall, or arrived in a new country and found trails nobody else knows. <strong>Setout gives those guides the tools to get paid — with zero commission, ever.</strong>
           </p>
           <div className="hero-actions">
-            <a href="/sign-up" className="btn-forest">Start guiding →</a>
-            <a href="/sign-up" className="btn-ghost">Plan a trip</a>
+            <a href={isLoggedIn ? "/dashboard" : "/sign-up"} className="btn-forest">
+              {isLoggedIn ? "Go to dashboard →" : "Start guiding →"}
+            </a>
+            <a href={isLoggedIn ? "/dashboard" : "/sign-up"} className="btn-ghost">
+              {isLoggedIn ? "Your trips" : "Plan a trip"}
+            </a>
           </div>
           <div className="hero-proof">
             <span className="proof-tag">Free to start</span>
@@ -386,7 +344,7 @@ export default function HomePage() {
           <div className="persona-title">Going back somewhere you loved?</div>
           <div className="persona-subtitle">&ldquo;Bring friends. Go for free.&rdquo;</div>
           <div className="persona-body">Organize the return trip. Charge your crew what it cost you. Cover your costs — or make it your gift to them. A professional booking link, automatic payments, no awkward Venmo requests.</div>
-          <a href="/sign-up" className="persona-cta">Plan a trip →</a>
+          <a href={isLoggedIn ? "/dashboard" : "/sign-up"} className="persona-cta">Plan a trip →</a>
         </div>
         <div className="persona persona-2">
           <div className="persona-bg"></div>
@@ -396,7 +354,7 @@ export default function HomePage() {
           <div className="persona-title">You know this river better than anyone.</div>
           <div className="persona-subtitle">&ldquo;Time to get paid for it.&rdquo;</div>
           <div className="persona-body">You&apos;ve guided friends for free for years. They keep saying you should charge. Now you can — with a professional booking page, gear list emails, waivers, and your money going straight to you.</div>
-          <a href="/sign-up" className="persona-cta">Start guiding →</a>
+          <a href={isLoggedIn ? "/dashboard" : "/sign-up"} className="persona-cta">Start guiding →</a>
         </div>
         <div className="persona persona-3">
           <div className="persona-bg"></div>
@@ -406,7 +364,7 @@ export default function HomePage() {
           <div className="persona-title">Every place you land, you find trails nobody else knows.</div>
           <div className="persona-subtitle">&ldquo;Get paid to explore the world.&rdquo;</div>
           <div className="persona-body">You&apos;re in Albania this month, the Azores next. You discover routes, find hidden spots, build a following. Setout lets you monetize wherever you are — build your audience, run trips, keep everything you earn.</div>
-          <a href="/sign-up" className="persona-cta">Guide the world →</a>
+          <a href={isLoggedIn ? "/dashboard" : "/sign-up"} className="persona-cta">Guide the world →</a>
         </div>
       </div>
 
@@ -491,8 +449,12 @@ export default function HomePage() {
           <h2 className="reveal">Be first<br/>on the <em>trail.</em></h2>
           <p className="capture-sub reveal">Create your free account and have your first trip live in 15 minutes. Zero commission. No credit card required.</p>
           <div className="capture-actions reveal">
-            <a href="/sign-up" className="btn-forest" style={{fontSize:'15px',padding:'16px 32px'}}>Create free account →</a>
-            <a href="/sign-in" className="btn-ghost" style={{fontSize:'15px',padding:'16px 32px',borderColor:'rgba(240,234,216,0.3)',color:'var(--parch)'}}>Sign in</a>
+            <a href={isLoggedIn ? "/dashboard" : "/sign-up"} className="btn-forest" style={{fontSize:'15px',padding:'16px 32px'}}>
+              {isLoggedIn ? "Go to dashboard →" : "Create free account →"}
+            </a>
+            {!isLoggedIn && (
+              <a href="/sign-in" className="btn-ghost" style={{fontSize:'15px',padding:'16px 32px',borderColor:'rgba(240,234,216,0.3)',color:'var(--parch)'}}>Sign in</a>
+            )}
           </div>
           <p className="capture-fine reveal">Free to start. No credit card. Cancel any time.</p>
         </div>
@@ -507,7 +469,9 @@ export default function HomePage() {
           <a href="#who" className="footer-link">Who it&apos;s for</a>
           <a href="#how" className="footer-link">How it works</a>
           <a href="#pricing" className="footer-link">Pricing</a>
-          <a href="/sign-up" className="footer-link">Get started</a>
+          <a href={isLoggedIn ? "/dashboard" : "/sign-up"} className="footer-link">
+            {isLoggedIn ? "Dashboard" : "Get started"}
+          </a>
         </div>
       </footer>
 
